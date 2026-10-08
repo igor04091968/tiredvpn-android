@@ -78,6 +78,19 @@ class SettingsDialogTest {
         return ShadowDialog.getLatestDialog() as AlertDialog
     }
 
+    @Test
+    fun `single flight strategy can be selected and stored`() {
+        val dialog = openDialog(R.id.protocolRow)
+        val list = dialog.listView
+        val index = (0 until list.adapter.count).firstOrNull {
+            list.adapter.getItem(it).toString() == "REALITY (Single Flight)"
+        } ?: error("single-flight strategy is missing from the picker")
+
+        list.performItemClick(list.adapter.getView(index, null, list), index, index.toLong())
+
+        assertEquals("reality_singleflight", stored().strategy)
+    }
+
     private fun AlertDialog.fields(): List<EditText> {
         val found = mutableListOf<EditText>()
         fun walk(view: View) {

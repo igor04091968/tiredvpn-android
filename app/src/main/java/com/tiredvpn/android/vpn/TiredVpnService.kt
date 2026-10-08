@@ -119,9 +119,9 @@ class TiredVpnService : VpnService() {
         private val _connectingPhase = MutableStateFlow("")
         val connectingPhase: StateFlow<String> = _connectingPhase.asStateFlow()
 
-        const val ACTION_CONNECT = "com.tiredvpn.android.CONNECT"
-        const val ACTION_DISCONNECT = "com.tiredvpn.android.DISCONNECT"
-        const val ACTION_FORCE_RESET = "com.tiredvpn.android.FORCE_RESET"
+        const val ACTION_CONNECT = "com.igor04091968.tiredvpn.CONNECT"
+        const val ACTION_DISCONNECT = "com.igor04091968.tiredvpn.DISCONNECT"
+        const val ACTION_FORCE_RESET = "com.igor04091968.tiredvpn.FORCE_RESET"
 
         // CONNECT WATCHDOG: safety net for the residual case where a blocking native
         // (cgo) call into the Go core never returns, wedging the Dispatchers.IO worker

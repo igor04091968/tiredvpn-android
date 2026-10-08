@@ -16,7 +16,7 @@ import java.io.File
  * ## Why an activity and not the broadcast receiver
  *
  * [com.tiredvpn.android.receiver.ConfigImportReceiver] is guarded by the
- * signature-level permission `com.tiredvpn.android.permission.VPN_CONTROL`.
+ * signature-level permission `com.igor04091968.tiredvpn.permission.VPN_CONTROL`.
  * `adb shell` runs as uid 2000 and holds no such permission - a signature
  * permission cannot be granted with `pm grant` either - so the platform drops
  * the broadcast before delivery while `am broadcast` still prints

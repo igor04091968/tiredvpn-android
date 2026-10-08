@@ -52,7 +52,7 @@ class UpdateWorker(
         const val UPDATE_REQUEST_CODE = 9001
 
         /** Second half of the same fix: a distinct action keeps the intents from matching. */
-        const val ACTION_INSTALL_UPDATE = "com.tiredvpn.android.action.INSTALL_UPDATE"
+        const val ACTION_INSTALL_UPDATE = "com.igor04091968.tiredvpn.action.INSTALL_UPDATE"
 
         private const val KEY_PHASE = "phase"
         private const val PHASE_CHECK = "check"

@@ -1,7 +1,7 @@
 # TiredVPN Android
 
-[![CI](https://github.com/tiredvpn/tiredvpn-android/actions/workflows/ci.yml/badge.svg)](https://github.com/tiredvpn/tiredvpn-android/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/tiredvpn/tiredvpn-android)](https://github.com/tiredvpn/tiredvpn-android/releases/latest)
+[![CI](https://github.com/igor04091968/tiredvpn-android/actions/workflows/ci.yml/badge.svg)](https://github.com/igor04091968/tiredvpn-android/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/igor04091968/tiredvpn-android)](https://github.com/igor04091968/tiredvpn-android/releases)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![Android](https://img.shields.io/badge/Android-7.0%2B-green.svg)](https://developer.android.com/about/versions/nougat)
 
@@ -9,7 +9,14 @@
 
 Android client for TiredVPN - a DPI-resistant VPN designed to operate reliably in censored network environments.
 
-**Related repositories:** [tiredvpn/tiredvpn](https://github.com/tiredvpn/tiredvpn) — Go server and CLI client
+This fork pins its native core to
+[igor04091968/tiredvpn v1.11.5-igor.1](https://github.com/igor04091968/tiredvpn/releases/tag/v1.11.5-igor.1)
+and adds `REALITY (Single Flight)` to the strategy picker. It is an
+experimental client option; the original REALITY strategy remains available.
+The app uses package ID `com.igor04091968.tiredvpn` and a separate signing
+key, so it installs alongside the upstream app. App settings are separate.
+
+**Related repository:** [igor04091968/tiredvpn](https://github.com/igor04091968/tiredvpn) — Go server and CLI client
 
 ## What is it
 
@@ -95,7 +102,7 @@ app/src/main/java/com/tiredvpn/android/
 
 ### Step 1: Build the Go native library
 
-Use the provided script. Without arguments it clones the [Go VPN core](https://github.com/tiredvpn/tiredvpn) into a fresh temporary directory, cross-compiles for all three architectures, and places the `.so` files in the right directories:
+Use the provided script. Without arguments it clones the pinned [fork core](https://github.com/igor04091968/tiredvpn/tree/v1.11.5-igor.1) into a fresh temporary directory, cross-compiles for all three architectures, and places the `.so` files in the right directories:
 
 ```bash
 export ANDROID_NDK_HOME=$HOME/Android/Sdk/ndk/27.2.12479018

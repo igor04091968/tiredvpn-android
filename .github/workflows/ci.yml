@@ -28,7 +28,9 @@ jobs:
       - name: Checkout tiredvpn core
         uses: actions/checkout@v7
         with:
-          repository: tiredvpn/tiredvpn
+          repository: igor04091968/tiredvpn
+          # Core tag v1.11.5-igor.1, pinned to its immutable commit.
+          ref: 1d76e0c33962da137583467f30d0c91746963dce
           path: tiredvpn-core
 
       - name: Setup Go 1.26

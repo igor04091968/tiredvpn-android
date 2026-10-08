@@ -7,6 +7,18 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.11.1-igor.1] - 2026-10-07
+
+### Added
+
+- Added `REALITY (Single Flight)` to the strategy picker. The bundled Go core
+  is pinned to the fork's `v1.11.5-igor.1` tag, which implements the strategy.
+  The original REALITY option remains available. This strategy has passed
+  canary tests on gw2; improved reliability under filtering has not yet been
+  demonstrated.
+- The fork has its own Android package ID and signing key, so it can be
+  installed alongside the upstream app.
+
 ## [1.11.1] - 2026-10-03
 
 ### Added

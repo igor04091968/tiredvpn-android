@@ -22,7 +22,8 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
 CORE_DIR=""
 OUTPUT_DIR="app/src/main/jniLibs"
-CORE_REPO="https://github.com/tiredvpn/tiredvpn.git"
+CORE_REPO="https://github.com/igor04091968/tiredvpn.git"
+CORE_REF="v1.11.5-igor.1"
 # Empty by default: the real version is read from the core checkout below so it
 # can never drift away from the code that actually gets compiled.
 VERSION=""
@@ -32,6 +33,7 @@ while [[ $# -gt 0 ]]; do
     --core-dir)  CORE_DIR="$2"; shift 2 ;;
     --output-dir) OUTPUT_DIR="$2"; shift 2 ;;
     --core-repo) CORE_REPO="$2"; shift 2 ;;
+    --core-ref) CORE_REF="$2"; shift 2 ;;
     --version)   VERSION="$2"; shift 2 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -60,9 +62,13 @@ if [[ -z "$CORE_DIR" ]]; then
   CORE_DIR="$(mktemp -d)/tiredvpn"
   echo "==> No --core-dir given, cloning $CORE_REPO into $CORE_DIR"
   git clone --depth 1 "$CORE_REPO" "$CORE_DIR"
+  git -C "$CORE_DIR" fetch --depth 1 origin tag "$CORE_REF"
+  git -C "$CORE_DIR" checkout --detach "$CORE_REF"
 elif [[ ! -d "$CORE_DIR" ]]; then
   echo "==> Cloning tiredvpn core into $CORE_DIR"
   git clone --depth 1 "$CORE_REPO" "$CORE_DIR"
+  git -C "$CORE_DIR" fetch --depth 1 origin tag "$CORE_REF"
+  git -C "$CORE_DIR" checkout --detach "$CORE_REF"
 fi
 
 if [[ -z "$VERSION" ]]; then

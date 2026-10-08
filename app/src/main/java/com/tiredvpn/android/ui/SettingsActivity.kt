@@ -63,10 +63,11 @@ class SettingsActivity : BaseActivity() {
         // Full canonical strategy list. The stored value (first) is the EXACT
         // strategy ID accepted by the core (ForceStrategy by ID/prefix). Labels
         // are human-readable. "auto" means automatic selection (default).
-        // Verified against tiredvpn-oss/internal/strategy/strategy.go.
+        // Verified against igor04091968/tiredvpn/internal/strategy/strategy.go.
         private val STRATEGIES = listOf(
             "auto" to "Auto (Best Available)",
             "reality" to "REALITY",
+            "reality_singleflight" to "REALITY (Single Flight)",
             "seqovl" to "Seqovl (sequence overlap)",
             "quic" to "QUIC",
             "quic_salamander" to "QUIC (Salamander)",

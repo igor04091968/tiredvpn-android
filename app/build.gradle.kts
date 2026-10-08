@@ -320,11 +320,11 @@ android {
     compileSdk = 37  // required by androidx.core 1.19.0 AAR metadata
 
     defaultConfig {
-        applicationId = "com.tiredvpn.android"
+        applicationId = "com.igor04091968.tiredvpn"
         minSdk = 24
         targetSdk = 37  // Android 16 QPR
-        versionCode = 25
-        versionName = "1.11.1"
+        versionCode = 26
+        versionName = "1.11.1-igor.1"
 
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")

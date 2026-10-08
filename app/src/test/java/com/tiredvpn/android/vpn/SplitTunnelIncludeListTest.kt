@@ -7,7 +7,7 @@ import org.junit.Test
 
 class SplitTunnelIncludeListTest {
 
-    private val own = "com.tiredvpn.android"
+    private val own = "com.igor04091968.tiredvpn"
     private val companions = listOf("com.google.android.gms", "com.google.android.gsf")
 
     @Test

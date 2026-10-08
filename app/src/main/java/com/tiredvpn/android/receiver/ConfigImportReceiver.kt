@@ -16,7 +16,7 @@ import java.io.File
  * ## This is NOT the adb path
  *
  * The receiver is declared with `android:permission=
- * "com.tiredvpn.android.permission.VPN_CONTROL"`, a signature-level permission.
+ * "com.igor04091968.tiredvpn.permission.VPN_CONTROL"`, a signature-level permission.
  * `adb shell` runs as uid 2000, holds no signature permissions, and cannot be
  * granted one with `pm grant` - so the platform drops the broadcast before it is
  * delivered while `am broadcast` cheerfully prints `Broadcast completed:
@@ -31,7 +31,7 @@ import java.io.File
  * can import without any UI:
  *
  *     Intent("com.tiredvpn.IMPORT_CONFIG")
- *         .setPackage("com.tiredvpn.android")
+ *         .setPackage("com.igor04091968.tiredvpn")
  *         .putExtra("payload", "tired://1.2.3.4:995?secret=xxx")
  *
  * ## Payload
