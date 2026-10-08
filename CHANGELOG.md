@@ -7,6 +7,14 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.12.1-igor.1] - 2026-10-08
+
+### Fixed
+
+- Fix GOST TLS 1.3 startup on Android by teaching the embedded core JNI parser to
+  accept the certificate pin and dedicated listener port. The previous APK sent
+  both flags, but the native parser ignored them.
+
 ## [1.12.0-igor.1] - 2026-10-08
 
 ### Added

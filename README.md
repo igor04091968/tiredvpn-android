@@ -13,7 +13,7 @@ This fork pins its native core to
 [igor04091968/tiredvpn v1.11.5-igor.1](https://github.com/igor04091968/tiredvpn/releases/tag/v1.11.5-igor.1)
 and adds `REALITY (Single Flight)` to the strategy picker. It is an
 experimental client option; the original REALITY strategy remains available.
-Release `1.12.0-igor.1` also adds the opt-in GOST TLS 1.3 (RFC 9367) transport
+Release `1.12.1-igor.1` includes the Android JNI parser fix for GOST TLS startup. Release `1.12.0-igor.1` added the opt-in GOST TLS 1.3 (RFC 9367) transport
 with `www.gosuslugi.ru` SNI. The app includes the public SHA-256 pin for the
 GOST certificate installed on `gw`/`gw2`; `gostPort` defaults to `12444`.
 Imported `tired://` profiles may override these with `gostPin` and `gostPort`.
