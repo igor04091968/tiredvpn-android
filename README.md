@@ -41,8 +41,13 @@ TiredVPN Android is the mobile client for the [TiredVPN](https://github.com/tire
 | Requirement       | Minimum            |
 |-------------------|--------------------|
 | Android version   | 7.0 (API 24)      |
-| Target SDK        | 33 (Android 13)   |
+| Target SDK        | 37 (Android 16)   |
 | Architectures     | `arm64-v8a`, `armeabi-v7a`, `x86_64` |
+
+The release also includes `tiredvpn-<version>-android-9-10.apk`, built with
+target SDK 28 and v1/v2 APK signatures for Android 9/10 compatibility. Both
+APK variants have the same package ID, version, signing key, and minimum
+Android version; install only one variant of a release at a time.
 
 The APK includes native libraries for all three architectures. Most modern phones use `arm64-v8a`.
 

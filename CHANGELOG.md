@@ -7,6 +7,15 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.11.1-igor.2] - 2026-10-08
+
+### Compatibility
+
+- Added a separately built Android 9/10 APK targeting API 28 and signed with
+  both v1 and v2 APK signature schemes. The standard APK remains available.
+- Bumped the fork release to version code 27 so either build can update the
+  preceding fork release without changing package identity or signing key.
+
 ## [1.11.1-igor.1] - 2026-10-07
 
 ### Added

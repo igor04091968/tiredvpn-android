@@ -315,6 +315,13 @@ val buildingReleaseArtifact = gradle.startParameter.taskNames.any { requested ->
         )
 }
 
+// A separate release build for Android 9/10 devices. It retains the normal
+// package ID and signing key, but asks the platform for Android 9-era runtime
+// compatibility behavior. Build with -PlegacyAndroid=true.
+val legacyAndroidBuild = providers.gradleProperty("legacyAndroid")
+    .map(String::toBoolean)
+    .getOrElse(false)
+
 android {
     namespace = "com.tiredvpn.android"
     compileSdk = 37  // required by androidx.core 1.19.0 AAR metadata
@@ -322,9 +329,9 @@ android {
     defaultConfig {
         applicationId = "com.igor04091968.tiredvpn"
         minSdk = 24
-        targetSdk = 37  // Android 16 QPR
-        versionCode = 26
-        versionName = "1.11.1-igor.1"
+        targetSdk = if (legacyAndroidBuild) 28 else 37  // Android 9 compatibility or Android 16 QPR
+        versionCode = 27
+        versionName = "1.11.1-igor.2"
 
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
@@ -373,6 +380,9 @@ android {
             storePassword = storePass ?: ""
             keyAlias = alias ?: ""
             keyPassword = keyPass ?: ""
+            // Keep v1 alongside v2 for compatibility with older OEM installers.
+            enableV1Signing = true
+            enableV2Signing = true
         }
     }
 
