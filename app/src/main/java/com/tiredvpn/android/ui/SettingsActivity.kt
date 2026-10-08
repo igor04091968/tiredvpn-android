@@ -68,6 +68,7 @@ class SettingsActivity : BaseActivity() {
             "auto" to "Auto (Best Available)",
             "reality" to "REALITY",
             "reality_singleflight" to "REALITY (Single Flight)",
+            "gost_tls13_gosuslugi" to "GOST TLS 1.3 (Gosuslugi SNI)",
             "seqovl" to "Seqovl (sequence overlap)",
             "quic" to "QUIC",
             "quic_salamander" to "QUIC (Salamander)",

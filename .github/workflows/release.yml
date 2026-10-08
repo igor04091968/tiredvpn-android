@@ -28,13 +28,13 @@ jobs:
         with:
           repository: igor04091968/tiredvpn
           # Core tag v1.11.5-igor.1, pinned to its immutable commit.
-          ref: 1d76e0c33962da137583467f30d0c91746963dce
+          ref: c5a1e37e9f58145ae7622b2a5a5f7588662c541e
           path: tiredvpn-core
 
       - name: Setup Go 1.26
         uses: actions/setup-go@v7
         with:
-          go-version: '1.26'
+          go-version: '1.27.1'
           cache: true
           cache-dependency-path: tiredvpn-core/go.mod
 
@@ -77,13 +77,13 @@ jobs:
         with:
           repository: igor04091968/tiredvpn
           # Core tag v1.11.5-igor.1, pinned to its immutable commit.
-          ref: 1d76e0c33962da137583467f30d0c91746963dce
+          ref: c5a1e37e9f58145ae7622b2a5f7588662c541e
           path: tiredvpn-core
 
       - name: Setup Go 1.26
         uses: actions/setup-go@v7
         with:
-          go-version: "1.26"
+          go-version: "1.27.1"
           cache: true
           cache-dependency-path: tiredvpn-core/go.mod
 

@@ -12,6 +12,8 @@ data class VpnConfig(
     val serverPort: Int,
     val secret: String,
     val strategy: String = "auto",
+    val gostTls13Pin: String = DEFAULT_GOST_TLS13_PIN,
+    val gostTls13Port: Int = 12444,
     val enableQuic: Boolean = true,
     val quicPort: Int = 443,
     val coverHost: String = "api.googleapis.com",
@@ -60,6 +62,8 @@ data class VpnConfig(
             put("serverPort", serverPort)
             put("secret", secret)
             put("strategy", strategy)
+            put("gostTls13Pin", gostTls13Pin)
+            put("gostTls13Port", gostTls13Port)
             put("enableQuic", enableQuic)
             put("quicPort", quicPort)
             put("coverHost", coverHost)
@@ -102,6 +106,12 @@ data class VpnConfig(
         params.add("secret=" + Uri.encode(secret))
         if (name.isNotBlank() && name != "Server") params.add("name=" + Uri.encode(name))
         if (strategy != "auto") params.add("strategy=" + Uri.encode(strategy))
+        if (strategy == "gost_tls13_gosuslugi" || gostTls13Pin != DEFAULT_GOST_TLS13_PIN) {
+            if (gostTls13Pin.isNotBlank()) params.add("gostPin=" + Uri.encode(gostTls13Pin))
+        }
+        if (strategy == "gost_tls13_gosuslugi" || gostTls13Port != 12444) {
+            if (gostTls13Port != 12444) params.add("gostPort=$gostTls13Port")
+        }
         if (!enableQuic) params.add("quic=false")
         if (quicPort != 443) params.add("quicPort=$quicPort")
         if (coverHost != "api.googleapis.com") params.add("cover=" + Uri.encode(coverHost))
@@ -135,6 +145,9 @@ data class VpnConfig(
     }
 
     companion object {
+        // Public SHA-256 DER pin for the operator-managed GOST listener shared by gw/gw2.
+        // The private key is never shipped; update this value when the server certificate rotates.
+        const val DEFAULT_GOST_TLS13_PIN: String = "756fd19fc5188cc476af7f2bdb41972ee647e4cb653b4cd60e8d609879db526a"
         // Connection modes
         val CONNECTION_MODES = listOf(
             "tun" to "VPN (Full Tunnel)",
@@ -145,6 +158,7 @@ data class VpnConfig(
         val STRATEGIES = listOf(
             "auto" to "Auto (Best Available)",
             "reality" to "REALITY Protocol",
+            "gost_tls13_gosuslugi" to "GOST TLS 1.3 (Gosuslugi SNI)",
             "seqovl" to "Seqovl (sequence overlap)",
             "quic" to "QUIC Tunnel",
             "websocket_padded" to "WebSocket Salamander",
@@ -172,6 +186,8 @@ data class VpnConfig(
                 serverPort = json.optInt("serverPort", 993),
                 secret = json.optString("secret", ""),
                 strategy = json.optString("strategy", "auto"),
+                gostTls13Pin = json.optString("gostTls13Pin", DEFAULT_GOST_TLS13_PIN),
+                gostTls13Port = json.optInt("gostTls13Port", 12444),
                 enableQuic = json.optBoolean("enableQuic", true),
                 quicPort = json.optInt("quicPort", 443),
                 coverHost = json.optString("coverHost", "api.googleapis.com"),
@@ -271,6 +287,8 @@ data class VpnConfig(
                     serverPort = resolvedPort,
                     secret = secret,
                     strategy = uri.getQueryParameter("strategy") ?: "auto",
+                    gostTls13Pin = uri.getQueryParameter("gostPin") ?: DEFAULT_GOST_TLS13_PIN,
+                    gostTls13Port = uri.getQueryParameter("gostPort")?.toIntOrNull() ?: 12444,
                     enableQuic = uri.getQueryParameter("quic")?.toBooleanStrictOrNull() ?: true,
                     quicPort = uri.getQueryParameter("quicPort")?.toIntOrNull() ?: 443,
                     coverHost = uri.getQueryParameter("cover") ?: "api.googleapis.com",
