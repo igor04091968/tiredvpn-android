@@ -323,8 +323,8 @@ android {
         applicationId = "com.igor04091968.tiredvpn"
         minSdk = 24
         targetSdk = 37  // Android 16 QPR
-        versionCode = 30
-        versionName = "1.12.1-igor.3"
+        versionCode = 31
+        versionName = "1.12.1-igor.4"
 
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")

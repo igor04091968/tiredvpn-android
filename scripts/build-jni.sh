@@ -62,13 +62,13 @@ if [[ -z "$CORE_DIR" ]]; then
   CORE_DIR="$(mktemp -d)/tiredvpn"
   echo "==> No --core-dir given, cloning $CORE_REPO into $CORE_DIR"
   git clone --depth 1 "$CORE_REPO" "$CORE_DIR"
-  git -C "$CORE_DIR" fetch --depth 1 origin tag "$CORE_REF"
-  git -C "$CORE_DIR" checkout --detach "$CORE_REF"
+  git -C "$CORE_DIR" fetch --depth 1 origin "$CORE_REF"
+  git -C "$CORE_DIR" checkout --detach FETCH_HEAD
 elif [[ ! -d "$CORE_DIR" ]]; then
   echo "==> Cloning tiredvpn core into $CORE_DIR"
   git clone --depth 1 "$CORE_REPO" "$CORE_DIR"
-  git -C "$CORE_DIR" fetch --depth 1 origin tag "$CORE_REF"
-  git -C "$CORE_DIR" checkout --detach "$CORE_REF"
+  git -C "$CORE_DIR" fetch --depth 1 origin "$CORE_REF"
+  git -C "$CORE_DIR" checkout --detach FETCH_HEAD
 fi
 
 if [[ -z "$VERSION" ]]; then
