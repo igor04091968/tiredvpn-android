@@ -7,6 +7,15 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.12.1-igor.2] - 2026-10-09
+
+### Fixed
+
+- Fixed `REALITY (Single Flight)` selection by bundling a Go core that registers
+  the strategy. It remains client-side and uses the normal REALITY server
+  protocol, so no server update is required.
+- Preserved the GOST TLS 1.3 strategy and its JNI parameters in the bundled core.
+
 ## [1.12.1-igor.1] - 2026-10-08
 
 ### Fixed
