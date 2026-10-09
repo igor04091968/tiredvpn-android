@@ -236,4 +236,24 @@ class VpnConfigTest {
         assertEquals(config.gostTls13Pin, restored.gostTls13Pin)
         assertEquals(config.gostTls13Port, restored.gostTls13Port)
     }
+    @Test
+    fun `GOST rotation pins survive JSON and URL round trips`() {
+        val pins = "a".repeat(64) + "," + "b".repeat(64)
+        val config = validConfig().copy(strategy = "gost_tls13_gosuslugi", gostTls13Pin = pins)
+        assertTrue(config.isValid)
+        assertEquals(pins, VpnConfig.fromJson(config.toJson()).gostTls13Pin)
+        assertEquals(pins, VpnConfig.fromUrl(config.toUrl())!!.gostTls13Pin)
+    }
+
+    @Test
+    fun `GOST refuses empty malformed duplicate or excessive pins`() {
+        val a = "a".repeat(64)
+        val b = "b".repeat(64)
+        for (pins in listOf("", "$a,", ",$a", "$a,invalid", "$a,$a", "$a,${a.uppercase()}", "$a,$b," + "c".repeat(64))) {
+            assertFalse(pins, validConfig().copy(strategy = "gost_tls13_gosuslugi", gostTls13Pin = pins).isValid)
+        }
+        assertTrue(validConfig().copy(strategy = "gost_tls13_gosuslugi", gostTls13Pin = " ${a.uppercase()} , $b ").isValid)
+        assertTrue(validConfig().copy(strategy = "gost_tls13_gosuslugi", gostTls13Pin = a).isValid)
+    }
+
 }

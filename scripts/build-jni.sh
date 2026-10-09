@@ -23,7 +23,7 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 CORE_DIR=""
 OUTPUT_DIR="app/src/main/jniLibs"
 CORE_REPO="https://github.com/igor04091968/tiredvpn.git"
-CORE_REF="v1.12.2-igor.3"
+CORE_REF="fce4f440843f0f0fad3cacdb236f5729a489f5be"
 # Empty by default: the real version is read from the core checkout below so it
 # can never drift away from the code that actually gets compiled.
 VERSION=""

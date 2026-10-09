@@ -493,4 +493,12 @@ class ConfigCodecTest {
         assertTrue(urls[1].contains("b.example"))
         assertNull(VpnConfig.extractTiredUrl("no link here"))
     }
+    @Test
+    fun `import preserves both explicitly trusted GOST rotation pins`() {
+        val pins = "a".repeat(64) + "," + "b".repeat(64)
+        val source = VpnConfig(serverAddress = "a.example", serverPort = 12443, secret = "k", strategy = "gost_tls13_gosuslugi", gostTls13Pin = pins)
+        assertEquals(pins, ConfigCodec.parse(source.toJson().toString()).servers.single().config.gostTls13Pin)
+        assertEquals(pins, ConfigCodec.parse(source.toUrl()).servers.single().config.gostTls13Pin)
+    }
+
 }

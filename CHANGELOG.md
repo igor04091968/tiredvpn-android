@@ -7,6 +7,12 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Validate one or two explicit GOST leaf DER certificate pins and preserve them
+  through JSON and tired URL import/export. Requires the matching rotation core.
+  Published APK 1.12.1-igor.3 still supports only one pin.
+
 ## [1.12.1-igor.3] - 2026-10-09
 
 ### Fixed

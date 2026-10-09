@@ -49,7 +49,16 @@ data class VpnConfig(
     val customDns: String = "" // "" = use core/fallback DNS
 ) {
     val isValid: Boolean
-        get() = serverAddress.isNotBlank() && serverPort in 1..65535 && secret.isNotBlank()
+        get() = serverAddress.isNotBlank() && serverPort in 1..65535 && secret.isNotBlank() &&
+            (strategy != "gost_tls13_gosuslugi" || hasValidGostPins)
+
+    // One trusted leaf DER pin, or two during an explicitly configured rotation.
+    private val hasValidGostPins: Boolean
+        get() {
+            val pins = gostTls13Pin.split(',').map { it.trim().lowercase() }
+            return pins.size in 1..2 && pins.all { it.matches(Regex("[0-9a-f]{64}")) } &&
+                pins.distinct().size == pins.size && gostTls13Port in 1..65535
+        }
 
     val serverEndpoint: String
         get() = "$serverAddress:$serverPort"

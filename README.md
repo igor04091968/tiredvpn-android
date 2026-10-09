@@ -19,6 +19,8 @@ Android client for TiredVPN - a DPI-resistant VPN designed to operate reliably i
 
 В APK [1.12.1-igor.3](https://github.com/igor04091968/tiredvpn-android/releases/tag/v1.12.1-igor.3) встроено ядро [1.12.2-igor.3](https://github.com/igor04091968/tiredvpn/releases/tag/v1.12.2-igor.3). VersionCode 30, прежняя подпись: приложение устанавливается поверх предыдущей версии форка. Минимальная версия Android — 7.0 (API 24). Пакет `com.igor04091968.tiredvpn` устанавливается отдельно от upstream.
 
+В исходном коде добавлена плановая ротация сертификата: поле `gostPin` принимает один pin или два через запятую. Оба задаются оператором заранее, срок сертификата проверяется, непроверенный сертификат отклоняется. Для двух pin нужна сборка с этим изменением; опубликованный APK `1.12.1-igor.3` поддерживает один pin. [Порядок ротации](https://github.com/igor04091968/tiredvpn/blob/main/GOST-IMPLEMENTATION.md#certificate-rotation-with-two-trusted-pins).
+
 Профили `tired://` поддерживают параметры `gostPin` и `gostPort`; стандартный отдельный порт ГОСТ — 12444. [Подробности реализации](https://github.com/igor04091968/tiredvpn/blob/main/docs/gost-cryptopro-clienthello.md).
 
 ## Материалы и компоненты сборки

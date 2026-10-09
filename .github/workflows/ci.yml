@@ -29,8 +29,8 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: igor04091968/tiredvpn
-          # GOST profile core pinned to its immutable commit.
-          ref: d533e19765b139e8aed6188b7a56d5fa27f31001
+          # GOST rotation core pinned to its immutable commit.
+          ref: fce4f440843f0f0fad3cacdb236f5729a489f5be
           path: tiredvpn-core
 
       - name: Setup Go 1.26
