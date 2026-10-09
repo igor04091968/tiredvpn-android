@@ -9,18 +9,17 @@
 
 Android client for TiredVPN - a DPI-resistant VPN designed to operate reliably in censored network environments.
 
-This fork pins its native core to
-[igor04091968/tiredvpn v1.11.5-igor.1](https://github.com/igor04091968/tiredvpn/releases/tag/v1.11.5-igor.1)
-and adds `REALITY (Single Flight)` to the strategy picker. It is an
-experimental client option; the original REALITY strategy remains available.
-Release `1.12.1-igor.1` includes the Android JNI parser fix for GOST TLS startup. Release `1.12.0-igor.1` added the opt-in GOST TLS 1.3 (RFC 9367) transport
-with `www.gosuslugi.ru` SNI. The app includes the public SHA-256 pin for the
-GOST certificate installed on `gw`/`gw2`; `gostPort` defaults to `12444`.
-Imported `tired://` profiles may override these with `gostPin` and `gostPort`.
-This proves transport compatibility only; resistance to ISP filtering remains
-unverified. The APK supports Android API 24 and newer, including Android 9/10.
-The app uses package ID `com.igor04091968.tiredvpn` and a separate signing
-key, so it installs alongside the upstream app. App settings are separate.
+## Имитация TLS-профиля ГОСТ
+
+В форке объединены REALITY Single Flight и ГОСТ TLS 1.3. Для имитации клиентского TLS-профиля записали хэндшейки CryptoPro CSP 5.0 R4 и по ним изменили ClientHello: порядок шифров и расширений, группы, алгоритмы подписи, версию TLS-записи и два key share. При каждом подключении клиент создаёт новые случайные значения и ключи; профиль формируется до вычисления хэша транскрипта.
+
+Соединение использует ГОСТ TLS 1.3. Клиент проверяет SHA-256 pin и срок действия сертификата сервера и отклоняет выбор AES. На Android сокет защищается через VpnService.protect до TCP connect; в логах видны адрес подключения, этап TLS и результат проверки pin.
+
+Профиль приближен к CryptoPro. Post-handshake authentication и PSK-only resumption не реализованы, поэтому TLS-отпечатки различаются. Автотесты проверяют структуру ClientHello, свежие ключи, HelloRetryRequest, отказ от AES и защиту сокета. Передача данных проверена на двух серверах; работу нового APK через МТС и устойчивость к фильтрации ещё предстоит проверить.
+
+В APK [1.12.1-igor.3](https://github.com/igor04091968/tiredvpn-android/releases/tag/v1.12.1-igor.3) встроено ядро [1.12.2-igor.3](https://github.com/igor04091968/tiredvpn/releases/tag/v1.12.2-igor.3). VersionCode 30, прежняя подпись: приложение устанавливается поверх предыдущей версии форка. Минимальная версия Android — 7.0 (API 24). Пакет `com.igor04091968.tiredvpn` устанавливается отдельно от upstream.
+
+Профили `tired://` поддерживают параметры `gostPin` и `gostPort`; стандартный отдельный порт ГОСТ — 12444. [Подробности реализации](https://github.com/igor04091968/tiredvpn/blob/main/docs/gost-cryptopro-clienthello.md).
 
 **Related repository:** [igor04091968/tiredvpn](https://github.com/igor04091968/tiredvpn) — Go server and CLI client
 
@@ -108,7 +107,7 @@ app/src/main/java/com/tiredvpn/android/
 
 ### Step 1: Build the Go native library
 
-Use the provided script. Without arguments it clones the pinned [fork core](https://github.com/igor04091968/tiredvpn/tree/v1.11.5-igor.1) into a fresh temporary directory, cross-compiles for all three architectures, and places the `.so` files in the right directories:
+Use the provided script. Without arguments it clones the pinned [fork core](https://github.com/igor04091968/tiredvpn/tree/v1.12.2-igor.3) into a fresh temporary directory, cross-compiles for all three architectures, and places the `.so` files in the right directories:
 
 ```bash
 export ANDROID_NDK_HOME=$HOME/Android/Sdk/ndk/27.2.12479018
