@@ -7,6 +7,24 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.12.1-igor.3] - 2026-10-09
+
+### Fixed
+
+- Protect GOST sockets through Android VpnService before TCP connection.
+- Log the actual GOST TCP destination and TLS/pin verification stages.
+
+### Changed
+
+- Bundle core d533e19765b139e8aed6188b7a56d5fa27f31001, published as
+  v1.12.2-igor.3, with a CryptoPro CSP 5.0 R4 inspired ClientHello.
+  This is an approximation: post-handshake authentication and PSK-only
+  resumption are omitted. TLS 1.3 GOST negotiation and certificate pin
+  checks remain enforced.
+- versionCode 30; same signing certificate as the previous fork release.
+- Tunnel checks passed against both production servers. Android operation
+  over MTS and resistance to active filtering still require field testing.
+
 ## [1.12.1-igor.2] - 2026-10-09
 
 ### Fixed
