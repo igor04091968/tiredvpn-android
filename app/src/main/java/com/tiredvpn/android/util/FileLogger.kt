@@ -17,6 +17,10 @@ object FileLogger {
     private const val LOG_FILE_NAME = "tiredvpn.log"
     private const val MAX_FILE_SIZE = 1_000_000L // 1 MB
 
+    @Volatile
+    var lastWriteError: String? = null
+        private set
+
     private var logFile: File? = null
     private val logQueue = ConcurrentLinkedQueue<String>()
     private val isRunning = AtomicBoolean(false)
@@ -29,6 +33,7 @@ object FileLogger {
     }
 
     /** Target file as an explicit parameter, so the writer can be tested without a Context. */
+    @Synchronized
     internal fun init(file: File) {
         logFile = file
         closeWriter()
@@ -37,7 +42,7 @@ object FileLogger {
     }
 
     private fun log(level: String, tag: String, message: String, throwable: Throwable? = null) {
-        val timestamp = dateFormat.format(Date())
+        val timestamp = synchronized(dateFormat) { dateFormat.format(Date()) }
         val logLine = buildString {
             append(timestamp)
             append(" ")
@@ -109,6 +114,7 @@ object FileLogger {
         writer ?: try {
             OutputStreamWriter(FileOutputStream(file, true), Charsets.UTF_8).also { writer = it }
         } catch (e: Exception) {
+            lastWriteError = "${e.javaClass.simpleName}: ${e.message}"
             Log.e(TAG, "Failed to open log file", e)
             null
         }
@@ -122,6 +128,7 @@ object FileLogger {
         writer = null
     }
 
+    @Synchronized
     private fun writeQueuedLogs() {
         val file = logFile ?: return
         if (logQueue.isEmpty()) return
@@ -139,14 +146,16 @@ object FileLogger {
             }
 
             val out = openWriter(file) ?: return
-            var line: String?
+            var line: String? = null
             var count = 0
-            while (logQueue.poll().also { line = it } != null && count < 100) {
+            while (count < 100 && logQueue.poll().also { line = it } != null) {
                 out.appendLine(line)
                 count++
             }
             out.flush()
+            lastWriteError = null
         } catch (e: Exception) {
+            lastWriteError = "${e.javaClass.simpleName}: ${e.message}"
             Log.e(TAG, "Failed to write logs", e)
             // A broken handle must not be reused: the file may have been
             // rotated or deleted from under us.
@@ -162,7 +171,7 @@ object FileLogger {
             val keepFrom = (lines.size * 0.3).toInt()
             val linesToKeep = lines.drop(keepFrom)
 
-            file.writeText("--- Log rotated at ${dateFormat.format(Date())} ---\n")
+            file.writeText("--- Log rotated at ${synchronized(dateFormat) { dateFormat.format(Date()) }} ---\n")
             file.appendText(linesToKeep.joinToString("\n"))
             file.appendText("\n")
 
@@ -170,15 +179,24 @@ object FileLogger {
         } catch (e: Exception) {
             Log.e(TAG, "Failed to rotate log", e)
             try {
-                file.writeText("--- Log cleared due to rotation error at ${dateFormat.format(Date())} ---\n")
+                file.writeText("--- Log cleared due to rotation error at ${synchronized(dateFormat) { dateFormat.format(Date()) }} ---\n")
             } catch (_: Exception) {}
         }
     }
 
+    /** Flush a bounded snapshot before the viewer reads the log. */
+    @Synchronized
+    fun flush() {
+        val batches = (logQueue.size + 99) / 100
+        repeat(batches) { writeQueuedLogs() }
+    }
+
+    @Synchronized
     fun clear() {
         // Close before deleting, or the open handle keeps writing to an
         // unlinked inode and the UI shows an empty log that never fills.
         closeWriter()
+        logQueue.clear()
         logFile?.let { file ->
             if (file.exists()) {
                 file.delete()

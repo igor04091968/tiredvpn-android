@@ -5,6 +5,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Build
+import com.tiredvpn.android.BuildConfig
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -112,7 +114,11 @@ class LogViewerActivity : BaseActivity() {
 
     private fun readLogFile(): String {
         return try {
-            tailOf(File(filesDir, "tiredvpn.log"), MAX_LINES)
+            FileLogger.flush()
+            val text = tailOf(File(filesDir, "tiredvpn.log"), MAX_LINES)
+            val header = "TiredVPN ${BuildConfig.VERSION_NAME}; Android ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})"
+            val error = FileLogger.lastWriteError
+            listOfNotNull(header, error?.let { "Log write error: $it" }, text.ifEmpty { "Log file is empty" }).joinToString("\n")
         } catch (e: Exception) {
             "Error reading logs: ${e.message}"
         }

@@ -86,10 +86,13 @@ class MainActivity : BaseActivity() {
     private val vpnPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
+        FileLogger.i(TAG, "VPN consent result: code=${result.resultCode}")
         if (result.resultCode == Activity.RESULT_OK) {
             startVpnService()
         } else {
-            Toast.makeText(this, "VPN permission denied", Toast.LENGTH_SHORT).show()
+            FileLogger.w(TAG, "VPN consent was not granted by Android; service not started")
+            FileLogger.flush()
+            Toast.makeText(this, "VPN permission denied", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -477,7 +480,16 @@ class MainActivity : BaseActivity() {
         }
 
         // Request VPN permission
-        val vpnIntent = VpnService.prepare(this)
+        FileLogger.i(TAG, "VPN consent check: Android ${Build.VERSION.RELEASE}, SDK ${Build.VERSION.SDK_INT}")
+        val vpnIntent = try {
+            VpnService.prepare(this)
+        } catch (e: Exception) {
+            FileLogger.e(TAG, "Android refused VPN consent preparation", e)
+            FileLogger.flush()
+            Toast.makeText(this, "VPN permission error: ${e.message}", Toast.LENGTH_LONG).show()
+            return
+        }
+        FileLogger.i(TAG, "VPN consent required=${vpnIntent != null}")
         if (vpnIntent != null) {
             // System will show consent dialog which handles VPN replacement
             vpnPermissionLauncher.launch(vpnIntent)
@@ -519,6 +531,21 @@ class MainActivity : BaseActivity() {
     }
 
     private fun startVpnService() {
+        // Consent can be revoked between the activity result and service start.
+        val consent = try {
+            VpnService.prepare(this)
+        } catch (e: Exception) {
+            FileLogger.e(TAG, "Android refused VPN permission check before service start", e)
+            FileLogger.flush()
+            Toast.makeText(this, "VPN permission error: ${e.message}", Toast.LENGTH_LONG).show()
+            return
+        }
+        if (consent != null) {
+            FileLogger.w(TAG, "VPN consent missing at service start; requesting again")
+            vpnPermissionLauncher.launch(consent)
+            return
+        }
+        FileLogger.i(TAG, "VPN consent confirmed; starting service")
         // Paint the connecting look here and nowhere earlier. connect() has
         // three ways to end without starting anything - no server configured,
         // VPN consent refused, "another VPN is active" dismissed - and the

@@ -2,7 +2,7 @@
 
 | Компонент | Версия | Состав |
 | --- | --- | --- |
-| Android APK | 1.12.1-igor.4, versionCode 31 | REALITY Single Flight, ГОСТ TLS 1.3, профиль ClientHello по образцу CryptoPro, Android protect до TCP connect и два pin для ротации |
+| Android APK | 1.12.1-igor.5, versionCode 32 | REALITY Single Flight, ГОСТ TLS 1.3, профиль ClientHello по образцу CryptoPro, Android protect до TCP connect и два pin для ротации |
 | Нативное ядро APK | fce4f440843f0f0fad3cacdb236f5729a489f5be | Точный закреплённый коммит, три ABI: arm64-v8a, armeabi-v7a, x86_64 |
 | Ядро Linux | 1.12.2-igor.4 | Те же две стратегии, клиентская поддержка двух pin; статические amd64/arm64 сборки |
 
@@ -12,4 +12,10 @@ APK устанавливается поверх предыдущего форк�
 
 Исходное изменение ротации проверено Go-тестами с -race, go vet и 56 Android-тестами импорта/конфигурации. Передача данных двух стратегий проверялась в предыдущих операторских и серверных испытаниях. Установка нового APK на телефон и работа через МТС ещё не подтверждены.
 
-[Скачать Android](https://github.com/igor04091968/tiredvpn-android/releases/tag/v1.12.1-igor.4) · [Скачать ядро Linux](https://github.com/igor04091968/tiredvpn/releases/tag/v1.12.2-igor.4) · [Ротация сертификата](https://github.com/igor04091968/tiredvpn/blob/main/GOST-IMPLEMENTATION.md#certificate-rotation-with-two-trusted-pins)
+[Скачать Android](https://github.com/igor04091968/tiredvpn-android/releases/tag/v1.12.1-igor.5) · [Скачать ядро Linux](https://github.com/igor04091968/tiredvpn/releases/tag/v1.12.2-igor.4) · [Ротация сертификата](https://github.com/igor04091968/tiredvpn/blob/main/GOST-IMPLEMENTATION.md#certificate-rotation-with-two-trusted-pins)
+
+## Диагностика Android в .igor.5
+
+В журнал добавлены проверка VPN-согласия, результат системного диалога и повторная проверка перед запуском службы. Отказ Android фиксируется даже до запуска VPN-службы. Просмотр журнала сначала сбрасывает очередь записи и показывает версию приложения/Android; ошибки записи файла выводятся на том же экране. Очистка и запись файла синхронизированы, устранена потеря строки на границе пакета из 100 записей.
+
+Изменения проверяются тестами FileLoggerTest и LogViewerPrivacyTest. Причина отказа VPN на планшете пока не установлена: нет точного системного сообщения и журнала устройства. Эта сборка добавляет диагностику и не утверждает, что ограничение Android устранено.

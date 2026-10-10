@@ -121,4 +121,13 @@ class FileLoggerTest {
             logFile.length() < 3_000_000
         )
     }
+    @Test
+    fun `flush writes every queued line including batch boundaries`() {
+        FileLogger.clear()
+        repeat(250) { FileLogger.i("test", "flush-marker-$it-end") }
+        FileLogger.flush()
+        val text = logFile.readText()
+        repeat(250) { assertTrue("missing line $it", text.contains("flush-marker-$it-end")) }
+    }
+
 }
