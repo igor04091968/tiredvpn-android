@@ -11,7 +11,6 @@ import android.net.Uri
 import android.net.VpnService
 import android.os.Build
 import android.os.Bundle
-import android.os.PowerManager
 import android.util.Log
 import android.provider.Settings
 import android.view.View
@@ -42,7 +41,6 @@ import com.tiredvpn.android.vpn.TiredVpnService
 import com.tiredvpn.android.vpn.VpnConfig
 import com.tiredvpn.android.vpn.VpnState
 import com.tiredvpn.android.vpn.ServerRepository
-import com.tiredvpn.android.util.BatteryOptimizationHelper
 import com.tiredvpn.android.util.CountryDetector
 import com.tiredvpn.android.util.TvUtils
 import kotlinx.coroutines.Job
@@ -86,13 +84,19 @@ class MainActivity : BaseActivity() {
     private val vpnPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        FileLogger.i(TAG, "VPN consent result: code=${result.resultCode}")
-        if (result.resultCode == Activity.RESULT_OK) {
+        val consentStillRequired = try {
+            VpnService.prepare(this) != null
+        } catch (e: Exception) {
+            FileLogger.e(TAG, "Unable to re-check VPN consent after system activity", e)
+            null
+        }
+        FileLogger.i(TAG, "VPN consent activity returned code=${result.resultCode}, consentStillRequired=$consentStillRequired")
+        if (result.resultCode == Activity.RESULT_OK || consentStillRequired == false) {
             startVpnService()
         } else {
-            FileLogger.w(TAG, "VPN consent was not granted by Android; service not started")
+            FileLogger.w(TAG, "Android closed VPN consent activity without granting permission")
             FileLogger.flush()
-            Toast.makeText(this, "VPN permission denied", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Android did not grant VPN permission. Tap Connect and accept the system request.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -101,16 +105,6 @@ class MainActivity : BaseActivity() {
     ) { granted ->
         if (!granted) {
             Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private val batteryOptimizationLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { _ ->
-        // Check if exemption was granted
-        val pm = getSystemService(POWER_SERVICE) as PowerManager
-        if (pm.isIgnoringBatteryOptimizations(packageName)) {
-            Toast.makeText(this, "Battery optimization disabled - VPN will stay connected", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -152,7 +146,8 @@ class MainActivity : BaseActivity() {
 
         setupMascotVideoClip()
         requestNotificationPermission()
-        requestBatteryOptimizationExemption()
+        // Keep optional battery-optimization Settings intents out of startup so
+        // they cannot overlap the system VPN-consent activity launched on Connect.
         setupListeners()
         observeVpnState()
         updateServerInfo()
@@ -173,37 +168,6 @@ class MainActivity : BaseActivity() {
 
         if (!isFirstRun) {
             checkConnectOnLaunch()
-        }
-    }
-
-    /**
-     * Ask once a day at most, not once per onCreate.
-     *
-     * A user who says no is asked again on the next rotation, the next return
-     * from settings, every cold start - which is how a reasonable request turns
-     * into something people learn to dismiss. BatteryOptimizationHelper already
-     * keeps the "asked at" timestamp; it just wasn't being called.
-     */
-    private fun requestBatteryOptimizationExemption() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (BatteryOptimizationHelper.shouldPromptForExemption(this)) {
-                // Request exemption - this shows a system dialog
-                try {
-                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                        data = Uri.parse("package:$packageName")
-                    }
-                    batteryOptimizationLauncher.launch(intent)
-                } catch (e: Exception) {
-                    // Fallback: open battery optimization settings
-                    try {
-                        val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-                        startActivity(intent)
-                        Toast.makeText(this, "Please disable battery optimization for TiredVPN", Toast.LENGTH_LONG).show()
-                    } catch (_: Exception) {
-                        // Device doesn't support this
-                    }
-                }
-            }
         }
     }
 
@@ -491,6 +455,10 @@ class MainActivity : BaseActivity() {
         }
         FileLogger.i(TAG, "VPN consent required=${vpnIntent != null}")
         if (vpnIntent != null) {
+            val resolved = packageManager.resolveActivity(vpnIntent, 0)?.activityInfo?.let {
+                "${it.packageName}/${it.name}"
+            }
+            FileLogger.i(TAG, "Launching VPN consent activity: action=${vpnIntent.action}, resolved=$resolved")
             // System will show consent dialog which handles VPN replacement
             vpnPermissionLauncher.launch(vpnIntent)
         } else if (isOtherVpnActive()) {
