@@ -28,7 +28,7 @@ jobs:
         with:
           repository: igor04091968/tiredvpn
           # Immutable core commit with explicit two-pin GOST certificate rotation.
-          ref: fce4f440843f0f0fad3cacdb236f5729a489f5be
+          ref: v1.12.2-igor.5
           path: tiredvpn-core
 
       - name: Setup Go 1.26
@@ -77,7 +77,7 @@ jobs:
         with:
           repository: igor04091968/tiredvpn
           # Immutable core commit with explicit two-pin GOST certificate rotation.
-          ref: fce4f440843f0f0fad3cacdb236f5729a489f5be
+          ref: v1.12.2-igor.5
           path: tiredvpn-core
 
       - name: Setup Go 1.26

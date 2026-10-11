@@ -26,9 +26,9 @@ Android client for TiredVPN - a DPI-resistant VPN designed to operate reliably i
 
 Профиль приближен к CryptoPro. Post-handshake authentication и PSK-only resumption не реализованы, поэтому TLS-отпечатки различаются. Автотесты проверяют структуру ClientHello, свежие ключи, HelloRetryRequest, отказ от AES и защиту сокета. Передача данных проверена на двух серверах; работу нового APK через МТС и устойчивость к фильтрации ещё предстоит проверить.
 
-В APK [1.12.1-igor.7](https://github.com/igor04091968/tiredvpn-android/releases/tag/v1.12.1-igor.7) встроено ядро [fce4f44](https://github.com/igor04091968/tiredvpn/commit/fce4f440843f0f0fad3cacdb236f5729a489f5be). VersionCode 34, прежняя подпись: приложение устанавливается поверх предыдущей версии форка. Русский интерфейс включается при выбранном русском языке Android. Минимальная версия Android — 7.0 (API 24). Пакет `com.igor04091968.tiredvpn` устанавливается отдельно от upstream.
+В APK [1.12.1-igor.8](https://github.com/igor04091968/tiredvpn-android/releases/tag/v1.12.1-igor.8) встроено ядро [v1.12.2-igor.5](https://github.com/igor04091968/tiredvpn/tree/v1.12.2-igor.5). VersionCode 35, прежняя подпись: приложение устанавливается поверх предыдущей версии форка. Русский интерфейс включается при выбранном русском языке Android. Минимальная версия Android — 7.0 (API 24). Пакет `com.igor04091968.tiredvpn` устанавливается отдельно от upstream.
 
-В исходном коде добавлена плановая ротация сертификата: поле `gostPin` принимает один pin или два через запятую. Оба задаются оператором заранее, срок сертификата проверяется, непроверенный сертификат отклоняется. APK `1.12.1-igor.7` поддерживает два pin; прежние профили с одним pin сохраняют совместимость. [Порядок ротации](https://github.com/igor04091968/tiredvpn/blob/main/GOST-IMPLEMENTATION.md#certificate-rotation-with-two-trusted-pins).
+В исходном коде добавлена плановая ротация сертификата: поле `gostPin` принимает один pin или два через запятую. Оба задаются оператором заранее, срок сертификата проверяется, непроверенный сертификат отклоняется. APK `1.12.1-igor.8` поддерживает два pin; прежние профили с одним pin сохраняют совместимость. [Порядок ротации](https://github.com/igor04091968/tiredvpn/blob/main/GOST-IMPLEMENTATION.md#certificate-rotation-with-two-trusted-pins).
 
 Профили `tired://` поддерживают параметры `gostPin` и `gostPort`; стандартный отдельный порт ГОСТ — 12444. [Подробности реализации](https://github.com/igor04091968/tiredvpn/blob/main/docs/gost-cryptopro-clienthello.md).
 
@@ -136,7 +136,7 @@ app/src/main/java/com/tiredvpn/android/
 
 ### Step 1: Build the Go native library
 
-Use the provided script. Without arguments it clones the pinned [fork core](https://github.com/igor04091968/tiredvpn/tree/v1.12.2-igor.3) into a fresh temporary directory, cross-compiles for all three architectures, and places the `.so` files in the right directories:
+Use the provided script. Without arguments it clones the pinned [fork core](https://github.com/igor04091968/tiredvpn/tree/v1.12.2-igor.5) into a fresh temporary directory, cross-compiles for all three architectures, and places the `.so` files in the right directories:
 
 ```bash
 export ANDROID_NDK_HOME=$HOME/Android/Sdk/ndk/27.2.12479018

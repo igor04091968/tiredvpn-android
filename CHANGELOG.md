@@ -7,6 +7,15 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.12.1-igor.8] - 2026-10-11
+
+### Changed
+
+- Bundle the TiredVPN core from `v1.12.2-igor.5` for the matching server release.
+  The Android package, signing certificate, imported profiles and saved
+  connection settings remain compatible with version .7.
+- Increase `versionCode` to 35.
+
 ## [1.12.1-igor.7] - 2026-10-11
 
 ### Added
