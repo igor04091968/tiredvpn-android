@@ -118,9 +118,9 @@ class LogViewerActivity : BaseActivity() {
             val text = tailOf(File(filesDir, "tiredvpn.log"), MAX_LINES)
             val header = "TiredVPN ${BuildConfig.VERSION_NAME}; Android ${Build.VERSION.RELEASE} (SDK ${Build.VERSION.SDK_INT})"
             val error = FileLogger.lastWriteError
-            listOfNotNull(header, error?.let { "Log write error: $it" }, text.ifEmpty { "Log file is empty" }).joinToString("\n")
+            listOfNotNull(header, error?.let { getString(R.string.logs_write_error, it) }, text.ifEmpty { getString(R.string.log_file_empty) }).joinToString("\n")
         } catch (e: Exception) {
-            "Error reading logs: ${e.message}"
+            getString(R.string.logs_read_error, e.message)
         }
     }
 

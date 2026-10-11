@@ -96,7 +96,7 @@ class MainActivity : BaseActivity() {
         } else {
             FileLogger.w(TAG, "Android closed VPN consent activity without granting permission")
             FileLogger.flush()
-            Toast.makeText(this, "Android did not grant VPN permission. Tap Connect and accept the system request.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.vpn_permission_not_granted, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -104,7 +104,7 @@ class MainActivity : BaseActivity() {
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (!granted) {
-            Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.notification_permission_denied, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -124,7 +124,7 @@ class MainActivity : BaseActivity() {
             }
         } else if (pendingForceUpdate?.forceUpdate == true) {
             // Force update required but permission denied - close app
-            Toast.makeText(this, "Update required to continue", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.update_required_to_continue, Toast.LENGTH_LONG).show()
             finish()
         }
         pendingInstallDownloaded = false
@@ -177,7 +177,7 @@ class MainActivity : BaseActivity() {
             binding.connectButton.requestFocus()
             // Update hint for TV users
             if (TiredVpnService.state.value is VpnState.Disconnected) {
-                binding.statusHint.text = "Press OK to Connect"
+                binding.statusHint.setText(R.string.press_ok_to_connect)
             }
         }
     }
@@ -450,7 +450,7 @@ class MainActivity : BaseActivity() {
         } catch (e: Exception) {
             FileLogger.e(TAG, "Android refused VPN consent preparation", e)
             FileLogger.flush()
-            Toast.makeText(this, "VPN permission error: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.vpn_permission_error, e.message), Toast.LENGTH_LONG).show()
             return
         }
         FileLogger.i(TAG, "VPN consent required=${vpnIntent != null}")
@@ -487,7 +487,7 @@ class MainActivity : BaseActivity() {
                 try {
                     startActivity(Intent(Settings.ACTION_VPN_SETTINGS))
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Cannot open VPN settings", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.cannot_open_vpn_settings, Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton(R.string.connect_anyway) { _, _ ->
@@ -505,7 +505,7 @@ class MainActivity : BaseActivity() {
         } catch (e: Exception) {
             FileLogger.e(TAG, "Android refused VPN permission check before service start", e)
             FileLogger.flush()
-            Toast.makeText(this, "VPN permission error: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.vpn_permission_error, e.message), Toast.LENGTH_LONG).show()
             return
         }
         if (consent != null) {

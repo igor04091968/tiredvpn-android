@@ -167,7 +167,7 @@ class MainScreenTest {
     }
 
     @Test
-    fun `the battery prompt is not repeated on every start`() {
+    fun `the battery settings screen is not launched automatically`() {
         shadowOf(context.getSystemService(android.os.PowerManager::class.java))
             .setIgnoringBatteryOptimizations(context.packageName, false)
         context.getSharedPreferences("tiredvpn_settings", Context.MODE_PRIVATE)
@@ -177,11 +177,11 @@ class MainScreenTest {
         val shadowApp = shadowOf(RuntimeEnvironment.getApplication())
         val firstRun = generateSequence { shadowApp.nextStartedActivity }
             .count { it.action == android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS }
-        assertEquals("the first start should ask", 1, firstRun)
+        assertEquals("the first start must not interrupt app startup", 0, firstRun)
 
         launch()
         val secondRun = generateSequence { shadowApp.nextStartedActivity }
             .count { it.action == android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS }
-        assertEquals("the second start must not ask again", 0, secondRun)
+        assertEquals("the next start must not launch it either", 0, secondRun)
     }
 }

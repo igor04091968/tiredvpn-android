@@ -51,6 +51,52 @@ class SettingsActivity : BaseActivity() {
         ActivityResultContracts.OpenDocument()
     ) { uri -> uri?.let { restoreConfigs(it) } }
 
+    // Persisted IDs are protocol values. Only the labels are localized.
+    private val STRATEGIES by lazy { listOf(
+        "auto" to getString(R.string.strategy_auto),
+        "reality" to getString(R.string.strategy_reality),
+        "reality_singleflight" to getString(R.string.strategy_reality_singleflight),
+        "gost_tls13_gosuslugi" to getString(R.string.strategy_gost_tls13),
+        "seqovl" to getString(R.string.strategy_seqovl),
+        "quic" to getString(R.string.strategy_quic),
+        "quic_salamander" to getString(R.string.strategy_quic_salamander),
+        "websocket_padded" to getString(R.string.strategy_websocket),
+        "http2_stego" to getString(R.string.strategy_http2),
+        "http_polling" to getString(R.string.strategy_http_polling),
+        "morph_Yandex Video" to getString(R.string.strategy_morph_yandex),
+        "morph_VK Video" to getString(R.string.strategy_morph_vk),
+        "morph_Baidu Video" to getString(R.string.strategy_morph_baidu),
+        "morph_Aparat Video" to getString(R.string.strategy_morph_aparat),
+        "ssh_camouflage" to getString(R.string.strategy_ssh),
+        "imap_camouflage" to getString(R.string.strategy_imap),
+        "antiprobe" to getString(R.string.strategy_antiprobe),
+        "confusion_2" to getString(R.string.strategy_confusion_ssh),
+        "confusion_0" to getString(R.string.strategy_confusion_dns),
+        "confusion_1" to getString(R.string.strategy_confusion_http),
+        "confusion_3" to getString(R.string.strategy_confusion_tls_smtp),
+        "state_exhaustion" to getString(R.string.strategy_state_exhaustion),
+        "geneva_russia" to getString(R.string.strategy_geneva_russia),
+        "geneva_china" to getString(R.string.strategy_geneva_china),
+        "geneva_iran" to getString(R.string.strategy_geneva_iran)
+    ) }
+
+    private val RTT_PROFILES by lazy { listOf(
+        "moscow-yandex" to getString(R.string.rtt_moscow_yandex),
+        "moscow-vk" to getString(R.string.rtt_moscow_vk),
+        "regional-russia" to getString(R.string.rtt_regional_russia),
+        "siberia" to getString(R.string.rtt_siberia),
+        "cdn" to getString(R.string.rtt_cdn),
+        "beijing-baidu" to getString(R.string.rtt_beijing_baidu),
+        "tehran-aparat" to getString(R.string.rtt_tehran_aparat)
+    ) }
+
+    private val SHAPER_PRESETS by lazy { listOf(
+        "" to getString(R.string.shaper_off),
+        "youtube_streaming" to getString(R.string.shaper_youtube),
+        "chrome_browsing" to getString(R.string.shaper_chrome),
+        "random_per_session" to getString(R.string.shaper_random)
+    ) }
+
     companion object {
 
         /**
@@ -60,59 +106,6 @@ class SettingsActivity : BaseActivity() {
          */
         internal const val MAX_RESTORE_BYTES = 1 * 1024 * 1024
 
-        // Full canonical strategy list. The stored value (first) is the EXACT
-        // strategy ID accepted by the core (ForceStrategy by ID/prefix). Labels
-        // are human-readable. "auto" means automatic selection (default).
-        // Verified against igor04091968/tiredvpn/internal/strategy/strategy.go.
-        private val STRATEGIES = listOf(
-            "auto" to "Auto (Best Available)",
-            "reality" to "REALITY",
-            "reality_singleflight" to "REALITY (Single Flight)",
-            "gost_tls13_gosuslugi" to "GOST TLS 1.3 (Gosuslugi SNI)",
-            "seqovl" to "Seqovl (sequence overlap)",
-            "quic" to "QUIC",
-            "quic_salamander" to "QUIC (Salamander)",
-            "websocket_padded" to "WebSocket (Padded)",
-            "http2_stego" to "HTTP/2 Steganography",
-            "http_polling" to "HTTP Polling",
-            // Canonical core strategy IDs (morph_ + profile name, with the literal
-            // space). The JNI bridge now passes argv as a real String[], so these
-            // IDs reach the core intact and ForceStrategy matches them exactly.
-            "morph_Yandex Video" to "Traffic Morph (Yandex)",
-            "morph_VK Video" to "Traffic Morph (VK)",
-            "morph_Baidu Video" to "Traffic Morph (Baidu)",
-            "morph_Aparat Video" to "Traffic Morph (Aparat)",
-            "ssh_camouflage" to "SSH Camouflage",
-            "imap_camouflage" to "IMAP Camouflage",
-            "antiprobe" to "Anti-Probe",
-            "confusion_2" to "Protocol Confusion (SSH)",
-            "confusion_0" to "Protocol Confusion (DNS)",
-            "confusion_1" to "Protocol Confusion (HTTP)",
-            "confusion_3" to "Protocol Confusion (TLS/SMTP)",
-            "state_exhaustion" to "State Exhaustion",
-            "geneva_russia" to "Geneva (Russia)",
-            "geneva_china" to "Geneva (China)",
-            "geneva_iran" to "Geneva (Iran)"
-        )
-
-        // Full RTT profile list (7), verified against internal/strategy/rtt.go.
-        private val RTT_PROFILES = listOf(
-            "moscow-yandex" to "Moscow - Yandex",
-            "moscow-vk" to "Moscow - VK",
-            "regional-russia" to "Regional Russia",
-            "siberia" to "Siberia",
-            "cdn" to "CDN",
-            "beijing-baidu" to "Beijing - Baidu",
-            "tehran-aparat" to "Tehran - Aparat"
-        )
-
-        // Traffic shaper presets. "" = off (default).
-        private val SHAPER_PRESETS = listOf(
-            "" to "Off",
-            "youtube_streaming" to "YouTube Streaming",
-            "chrome_browsing" to "Chrome Browsing",
-            "random_per_session" to "Random (per session)"
-        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -179,7 +172,7 @@ class SettingsActivity : BaseActivity() {
         } catch (e: Exception) {
             "1.0.0"
         }
-        binding.versionText.text = "TiredVPN for Android v$versionName"
+        binding.versionText.text = getString(R.string.app_version_for_android, versionName)
 
         // Per-server settings
         if (config != null) {
@@ -483,7 +476,7 @@ class SettingsActivity : BaseActivity() {
                     arrayOf("application/json", "text/plain", "application/octet-stream", "*/*")
                 )
             } catch (e: Exception) {
-                Toast.makeText(this, "No file picker available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.no_file_picker, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -525,7 +518,7 @@ class SettingsActivity : BaseActivity() {
             }
             startActivity(Intent.createChooser(shareIntent, getString(R.string.backup_share)))
         } catch (e: Exception) {
-            Toast.makeText(this, "Backup failed: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.backup_failed, e.message), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -621,7 +614,7 @@ class SettingsActivity : BaseActivity() {
         }
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("RTT Masking")
+            .setTitle(R.string.rtt_masking_title)
             .setSingleChoiceItems(names.toTypedArray(), currentIndex) { dialog, which ->
                 val newConfig = if (which == 0) {
                     config.copy(rttMasking = false)
@@ -643,8 +636,8 @@ class SettingsActivity : BaseActivity() {
         }
 
         val hostInput = TextInputLayout(this).apply {
-            hint = "Cover Host"
-            helperText = "Host to mimic in traffic patterns"
+            hint = getString(R.string.cover_host_hint)
+            helperText = getString(R.string.cover_host_helper)
         }
         val hostEditText = TextInputEditText(this).apply {
             setText(config.coverHost)
@@ -663,14 +656,14 @@ class SettingsActivity : BaseActivity() {
         )
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("Cover Host")
+            .setTitle(R.string.cover_host)
             .setView(layout)
             .setItems(presets) { dialog, which ->
                 val newConfig = config.copy(coverHost = presets[which])
                 if (persist(newConfig)) updateAdvancedSettingsDisplay(newConfig)
                 dialog.dismiss()
             }
-            .setPositiveButton("Custom") { dialog, _ ->
+            .setPositiveButton(R.string.custom) { dialog, _ ->
                 val host = hostEditText.text?.toString()?.trim() ?: ""
                 if (!InputValidation.isValidHost(host)) {
                     Toast.makeText(this, R.string.invalid_host, Toast.LENGTH_SHORT).show()
@@ -680,7 +673,7 @@ class SettingsActivity : BaseActivity() {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -1055,14 +1048,14 @@ class SettingsActivity : BaseActivity() {
 
         // Show explanation dialog first
         MaterialAlertDialogBuilder(this)
-            .setTitle("Battery Optimization")
+            .setTitle(R.string.battery_optimization_title)
             .setMessage(
                 "For reliable VPN connections, TiredVPN needs to run without battery restrictions.\n\n" +
                 "Without this exemption, Android may kill the VPN when your device sleeps, " +
                 "causing disconnections.\n\n" +
                 "This does NOT significantly affect battery life."
             )
-            .setPositiveButton("Disable Optimization") { _, _ ->
+            .setPositiveButton(R.string.disable_optimization) { _, _ ->
                 // Try direct request first (requires permission in manifest)
                 try {
                     val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
@@ -1082,7 +1075,7 @@ class SettingsActivity : BaseActivity() {
                     }
                 }
             }
-            .setNegativeButton("Later", null)
+            .setNegativeButton(R.string.later, null)
             .show()
     }
 }

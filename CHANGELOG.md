@@ -59,7 +59,7 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- Add the experimental `GOST TLS 1.3 (Gosuslugi SNI)` strategy to the protocol
+- Add the experimental `GOST TLS 1.3` strategy to the protocol
   picker and pass its server certificate pin and dedicated port from the app's
   operator defaults or imported `tired://` overrides. The default GOST listener
   port is 12444. This transport is opt-in and filtering resistance is

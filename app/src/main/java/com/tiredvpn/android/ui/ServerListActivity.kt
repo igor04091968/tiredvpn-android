@@ -214,9 +214,9 @@ class ServerListActivity : BaseActivity() {
 
     private fun deleteServer(server: VpnConfig) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Delete Server")
-            .setMessage("Are you sure you want to delete ${server.name}?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(R.string.delete_server_title)
+            .setMessage(getString(R.string.delete_server_confirm, server.name))
+            .setPositiveButton(R.string.delete) { _, _ ->
                 // refreshList still runs on a refusal: the row is redrawn from
                 // storage, so the server the user tried to delete reappears.
                 // That plus the toast is the honest picture; silently redrawing
@@ -228,7 +228,7 @@ class ServerListActivity : BaseActivity() {
                 )
                 refreshList()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 }

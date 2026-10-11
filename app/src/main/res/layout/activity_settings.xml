@@ -367,7 +367,7 @@
                     android:id="@+id/rttValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Disabled"
+                    android:text="@string/value_disabled"
                     android:textColor="@color/text_hint"
                     android:textSize="14sp" />
 

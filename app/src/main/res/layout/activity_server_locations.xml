@@ -43,7 +43,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_add"
-            android:contentDescription="Add Server"
+            android:contentDescription="@string/add_server"
             app:tint="@color/text_primary_dark" />
 
     </LinearLayout>
@@ -80,7 +80,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="12dp"
                 android:background="@null"
-                android:hint="Search by name"
+                android:hint="@string/search_by_name"
                 android:textColor="@color/text_primary_dark"
                 android:textColorHint="@color/text_hint"
                 android:textSize="14sp"

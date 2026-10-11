@@ -112,7 +112,7 @@ class ServerAdapter(
                     ContextCompat.getColor(binding.root.context, R.color.text_hint)
                 )
             } else {
-                 binding.latencyText.text = "Error"
+                 binding.latencyText.setText(R.string.latency_error)
                  binding.signalIndicator.setColorFilter(
                     ContextCompat.getColor(binding.root.context, R.color.signal_poor)
                 )

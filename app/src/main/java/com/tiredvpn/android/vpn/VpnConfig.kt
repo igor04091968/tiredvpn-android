@@ -167,7 +167,7 @@ data class VpnConfig(
         val STRATEGIES = listOf(
             "auto" to "Auto (Best Available)",
             "reality" to "REALITY Protocol",
-            "gost_tls13_gosuslugi" to "GOST TLS 1.3 (Gosuslugi SNI)",
+            "gost_tls13_gosuslugi" to "GOST TLS 1.3",
             "seqovl" to "Seqovl (sequence overlap)",
             "quic" to "QUIC Tunnel",
             "websocket_padded" to "WebSocket Salamander",

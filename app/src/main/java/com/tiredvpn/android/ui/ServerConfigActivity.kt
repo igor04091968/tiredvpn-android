@@ -66,7 +66,7 @@ class ServerConfigActivity : BaseActivity() {
                 binding.serverPortInput.setText(config.serverPort.toString())
                 binding.secretInput.setText(config.secret)
             } else {
-                Toast.makeText(this, "Server not found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.server_not_found, Toast.LENGTH_SHORT).show()
                 finish()
             }
         } else {
@@ -94,7 +94,7 @@ class ServerConfigActivity : BaseActivity() {
 
         // QR Scanner disabled for 16KB page support on recent Android devices
         binding.scanQrButton.setOnClickListener {
-            Toast.makeText(this, "QR Scanner temporarily disabled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.qr_scanner_disabled, Toast.LENGTH_SHORT).show()
             // qrScannerLauncher.launch(Intent(this, QrScannerActivity::class.java))
         }
 
@@ -234,7 +234,7 @@ class ServerConfigActivity : BaseActivity() {
             return
         }
 
-        Toast.makeText(this, "Server saved", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.server_saved, Toast.LENGTH_SHORT).show()
         finish()
     }
 }
