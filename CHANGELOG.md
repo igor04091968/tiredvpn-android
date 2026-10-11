@@ -7,6 +7,17 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.12.1-igor.7] - 2026-10-11
+
+### Added
+
+- Add Russian translations for the app interface, settings, notifications, and
+  connection strategy labels. The GOST transport is shown as `ГОСТ TLS 1.3`.
+
+### Changed
+
+- Keep existing profiles and the signing certificate compatible; versionCode 34.
+
 ## [1.12.1-igor.4] - 2026-10-10
 
 ### Added
