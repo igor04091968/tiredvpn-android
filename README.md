@@ -181,6 +181,10 @@ For a release build with ProGuard minification:
 2. Enter the server address, port, and client secret.
 3. Tap **Save** and connect.
 
+### IPv6 inside the tunnel
+
+IPv6 transport to the server and IPv6 carried inside the VPN are separate settings. For the phone to use the server’s public IPv6 exit, enable **“IPv6 в туннеле (двойной стек)”** in the active server profile, then reconnect. It is off by default. The IPv6 endpoint and transport preference do not turn on tunnel IPv6. See the [IPv6 setup guide](docs/ipv6-ru.md).
+
 ### Via deep link
 
 Share a `tired://` URI. The app registers an intent filter for the `tired` scheme and opens the server configuration screen with pre-filled fields.
