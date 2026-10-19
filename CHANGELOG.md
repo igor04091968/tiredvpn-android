@@ -7,16 +7,16 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [1.12.1-igor.9] - 2026-10-19
+## [1.12.1-igor.10] - 2026-10-19
 
 ### Fixed
 
-- Bundle core `v1.12.2-igor.7`: IPv4/IPv6 TCP MSS, IPv6 Packet Too Big,
+- Bundle core `v1.12.2-igor.8`: IPv4/IPv6 TCP MSS, IPv6 Packet Too Big,
   correct PMTU feedback direction and serialized tunnel frames.
 - Validate MTU from imported/saved settings and keep VpnService's interface
   MTU at or below the native core limit. Invalid imports use automatic mode.
 - Keep default MTU 1280, existing profiles, package ID and signing certificate.
-  Increase versionCode to 36.
+  Increase versionCode to 37.
 
 ### Validation
 
