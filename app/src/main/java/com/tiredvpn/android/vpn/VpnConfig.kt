@@ -224,7 +224,7 @@ data class VpnConfig(
                 // QUIC SNI fragmentation
                 quicSniFrag = json.optBoolean("quicSniFrag", false),
                 // Tunnel overrides
-                mtu = json.optInt("mtu", 0),
+                mtu = TunnelMtu.overrideOrAuto(json.optInt("mtu", 0)),
                 customDns = json.optString("customDns", "")
             )
         }
@@ -323,7 +323,7 @@ data class VpnConfig(
                     serverSelectionPolicy = uri.getQueryParameter("poolPolicy")
                         ?: ServerPoolConfig.DEFAULT_POLICY,
                     quicSniFrag = uri.getQueryParameter("quicSniFrag")?.toBooleanStrictOrNull() ?: false,
-                    mtu = uri.getQueryParameter("mtu")?.toIntOrNull() ?: 0,
+                    mtu = TunnelMtu.overrideOrAuto(uri.getQueryParameter("mtu")?.toIntOrNull() ?: 0),
                     customDns = uri.getQueryParameter("dns") ?: ""
                 )
             } catch (e: Exception) {

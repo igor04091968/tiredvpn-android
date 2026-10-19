@@ -2024,8 +2024,9 @@ class TiredVpnService : VpnService() {
         }
 
         // TUN MTU override (TUN path only)
-        if (config.mtu > 0) {
-            args.addAll(listOf("-tun-mtu", config.mtu.toString()))
+        val mtuOverride = TunnelMtu.overrideOrAuto(config.mtu)
+        if (mtuOverride > 0) {
+            args.addAll(listOf("-tun-mtu", mtuOverride.toString()))
         }
 
         // IPv6 inside the tunnel (dual-stack handshake v0x04). Old cores warn
@@ -4087,8 +4088,8 @@ class TiredVpnService : VpnService() {
                 else -> tunConfig.ip
             }
 
-            // MTU override: use config.mtu if set (>0), otherwise core-provided MTU
-            val effectiveMtu = if (config.mtu > 0) config.mtu else tunConfig.mtu
+            // A saved/imported override is a cap; never exceed the core limit.
+            val effectiveMtu = TunnelMtu.effective(config.mtu, tunConfig.mtu)
 
             // DNS + IPv6 addressing plan: real dual-stack v6 when the core
             // negotiated it, otherwise today's v4-only setup with the leak
@@ -4605,7 +4606,7 @@ class TiredVpnService : VpnService() {
                     // leaves headroom for tunnel encapsulation. 1400 let segments
                     // exceed the real path MTU once framed, causing fragmentation
                     // / PMTUD blackholes and poor download throughput (issue #27).
-                    mtu = json.optInt("mtu", 1280),
+                    mtu = TunnelMtu.effective(0, json.optInt("mtu", TunnelMtu.DEFAULT)),
                     routes = json.optString("routes", "0.0.0.0/0"),
                     ip6 = json.optString("ip6", "").takeIf { it.isNotBlank() },
                     serverIp6 = json.optString("server_ip6", "").takeIf { it.isNotBlank() }
