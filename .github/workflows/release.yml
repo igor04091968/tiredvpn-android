@@ -27,8 +27,8 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: igor04091968/tiredvpn
-          # Immutable core commit with explicit two-pin GOST certificate rotation.
-          ref: v1.12.2-igor.5
+          # Pinned core release with dual-stack MSS/PMTU fixes and GOST pin rotation.
+          ref: 0a49c8f833fbb74b8197f10807e62e181e7b4a2a
           path: tiredvpn-core
 
       - name: Setup Go 1.26
@@ -47,7 +47,7 @@ jobs:
       - name: Build JNI libraries
         run: |
           export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
-          ./scripts/build-jni.sh --core-dir "$GITHUB_WORKSPACE/tiredvpn-core"
+          ./scripts/build-jni.sh --core-dir "$GITHUB_WORKSPACE/tiredvpn-core" --version "1.12.2-igor.7-android-jni"
 
       - name: Unit Tests
         run: ./gradlew test
@@ -76,8 +76,8 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: igor04091968/tiredvpn
-          # Immutable core commit with explicit two-pin GOST certificate rotation.
-          ref: v1.12.2-igor.5
+          # Pinned core release with dual-stack MSS/PMTU fixes and GOST pin rotation.
+          ref: 0a49c8f833fbb74b8197f10807e62e181e7b4a2a
           path: tiredvpn-core
 
       - name: Setup Go 1.26
@@ -96,7 +96,7 @@ jobs:
       - name: Build JNI libraries
         run: |
           export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
-          ./scripts/build-jni.sh --core-dir "$GITHUB_WORKSPACE/tiredvpn-core"
+          ./scripts/build-jni.sh --core-dir "$GITHUB_WORKSPACE/tiredvpn-core" --version "1.12.2-igor.7-android-jni"
 
       - name: Decode keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "$GITHUB_WORKSPACE/release.keystore"

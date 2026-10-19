@@ -7,6 +7,23 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.12.1-igor.9] - 2026-10-19
+
+### Fixed
+
+- Bundle core `v1.12.2-igor.7`: IPv4/IPv6 TCP MSS, IPv6 Packet Too Big,
+  correct PMTU feedback direction and serialized tunnel frames.
+- Validate MTU from imported/saved settings and keep VpnService's interface
+  MTU at or below the native core limit. Invalid imports use automatic mode.
+- Keep default MTU 1280, existing profiles, package ID and signing certificate.
+  Increase versionCode to 36.
+
+### Validation
+
+- 694 Android unit tests: no failures, one skipped; release lint passed for
+  the MTU change. Device throughput and Wi-Fi/mobile handover still need
+  verification after installing this release.
+
 ## [1.12.1-igor.8] - 2026-10-11
 
 ### Changed
